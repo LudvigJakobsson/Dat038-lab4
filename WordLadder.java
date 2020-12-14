@@ -78,11 +78,20 @@ public class WordLadder implements DirectedGraph<String> {
      * @return a list of the graph edges that originate from {@code w}
      */
     public List<DirectedEdge<String>> outgoingEdges(String w) {
-        /******************************
-         * TODO: Task 2               *
-         * Change below this comment  *
-         ******************************/
-        return new LinkedList<>();
+        List<DirectedEdge<String>> outgoing = new LinkedList<>();
+
+        char[] array;
+        for (int i = 0; i < w.length(); i++) {
+            array = w.toCharArray();
+            for (char c : charset) {
+                array[i] = c;
+                String newWord = new String(array);
+                if (dictionary.contains(newWord)) {
+                    outgoing.add(new DirectedEdge<>(w, newWord, 1));
+                }
+            }
+        }
+        return outgoing;
     }
 
 
@@ -93,11 +102,15 @@ public class WordLadder implements DirectedGraph<String> {
      * (the number of differing character positions)
      */
     public double guessCost(String w, String u) {
-        /******************************
-         * TODO: Task 4               *
-         * Change below this comment  *
-         ******************************/
-        return 0;
+        char[] charArray1 = w.toCharArray();
+        char[] charArray2 = u.toCharArray();
+        double count = 0;
+        for(int i = 0; i< charArray1.length; i++){
+            if (charArray1[i] != charArray2[i]) {
+                count++;
+            }
+        }
+        return count;
     }
 
 

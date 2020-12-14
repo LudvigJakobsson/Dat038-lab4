@@ -1,11 +1,7 @@
 
-import java.util.List;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.PriorityQueue;
-import java.util.Random;
-import java.util.Comparator;
+import java.util.*;
 
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.stream.Collectors;
 import java.util.function.Function;
 
@@ -87,12 +83,27 @@ public class PathFinder<Node> {
      * @param goal   the goal node
      */
     public Result searchUCS(Node start, Node goal) {
+        HashSet<Node> visitedEntries= new HashSet<>();
         int iterations = 0;
         Queue<PQEntry> pqueue = new PriorityQueue<>(Comparator.comparingDouble((entry) -> entry.costToHere));
-        /******************************
-         * TODO: Task 1a+c            *
-         * Change below this comment  *
-         ******************************/
+        pqueue.add(new PQEntry(start, 0, null));
+        while(pqueue.peek() != null) {
+            iterations++;
+            // Retrieves and removes the head of queue
+            PQEntry entry = pqueue.poll();
+            //Check if node is visited
+            if (!visitedEntries.contains(entry.node)) {
+                if(entry.node.equals(goal)) {
+                    List<Node> path = extractPath(entry);
+                    return new Result(true, start, goal, entry.costToHere, path, iterations);
+                }
+                for (DirectedEdge<Node> edge : graph.outgoingEdges(entry.node)) {
+                    double costToNext = entry.costToHere + edge.weight();
+                    pqueue.add(new PQEntry(edge.to(), costToNext, entry));
+                }
+                visitedEntries.add(entry.node);
+            }
+        }
         return new Result(false, start, goal, -1, null, iterations);
     }
     
@@ -104,10 +115,29 @@ public class PathFinder<Node> {
      */
     public Result searchAstar(Node start, Node goal) {
         int iterations = 0;
-        /******************************
-         * TODO: Task 3               *
-         * Change below this comment  *
-         ******************************/
+        HashSet<Node> visitedEntries= new HashSet<>();
+        Queue<PQEntry> pqueue = new PriorityQueue<>(Comparator.comparingDouble((entry) -> entry.costToHere + entry.getGuessCost()));
+        pqueue.add(new PQEntry(start, 0, null));
+        while(pqueue.peek() != null) {
+            iterations++;
+            // Retrieves and removes the head of queue
+            PQEntry entry = pqueue.poll();
+            //Check if node is visited
+            if (!visitedEntries.contains(entry.node)) {
+                if(entry.node.equals(goal)) {
+                    List<Node> path = extractPath(entry);
+                    return new Result(true, start, goal, entry.costToHere, path, iterations);
+                }
+                for (DirectedEdge<Node> edge : graph.outgoingEdges(entry.node)) {
+                    double costToNext = entry.costToHere + edge.weight();
+                    double guess = graph.guessCost(edge.to(), goal);
+                    PQEntry newEntry = new PQEntry(edge.to(), costToNext, entry);
+                    newEntry.setGuessCost(guess);
+                    pqueue.add(newEntry);
+                }
+                visitedEntries.add(entry.node);
+            }
+        }
         return new Result(false, start, goal, -1, null, iterations);
     }
 
@@ -118,11 +148,9 @@ public class PathFinder<Node> {
      * @return the path from start to goal as a list of nodes
      */
     private List<Node> extractPath(PQEntry entry) {
-        LinkedList<Node> path = new LinkedList<>();
-        /******************************
-         * TODO: Task 1b              *
-         * Change below this comment  *
-         ******************************/
+        List<Node> path = new LinkedList<>();
+        if (entry == null) return path;
+        path = extractPath(entry.backPointer);
         path.add(entry.node);
         return path;
     }
@@ -135,10 +163,15 @@ public class PathFinder<Node> {
         public final Node node;
         public final double costToHere;
         public final PQEntry backPointer;
-        /******************************
-         * TODO: Task 3               *
-         * Change below this comment  *
-         ******************************/
+        public double guessCost;
+
+        public void setGuessCost(double guess) {
+            this.guessCost = guess;
+        }
+
+        public double getGuessCost() {
+            return guessCost;
+        }
 
         PQEntry(Node n, double c, PQEntry bp) {
             node = n;

@@ -4,10 +4,9 @@
 ** Lab 4: Path finder
 *******************************************************************************/
 
-Name of lab group: [...]
-Group member A:    [...]
-Group member B:    [...]
-Group member C:    [...]
+Name of lab group: 95
+Group member A:    Anthon Odengard
+Group member B:    Ludvig Jakobsson
 
 
 /******************************************************************************
@@ -17,48 +16,48 @@ Group member C:    [...]
 
 > java RunPathFinder ucs AdjacencyGraph graphs/AdjacencyGraph/citygraph-SE.txt Lund Kiruna
 
-loop iterations: [...]
-minimal cost:    [...]
-shortest path:   [...]
+loop iterations: 5427
+minimal cost:    1826
+shortest path:   32
 
 > java RunPathFinder ucs NPuzzle 3 "/HFG/BED/C_A/" "/ABC/DEF/GH_/"
 
-loop iterations: [...]
-minimal cost:    [...]
-shortest path:   [...]
+loop iterations: 483573
+minimal cost:    31
+shortest path:   32
 
 > java RunPathFinder astar NPuzzle 3 "/HFG/BED/C_A/" "/ABC/DEF/GH_/"
 
-loop iterations: [...]
-minimal cost:    [...]
+loop iterations: 32375
+minimal cost:    31
 
 > java RunPathFinder ucs NPuzzle 3 "/HGF/BED/C_A/" "/ABC/DEF/GH_/"
 
-loop iterations: [...]
-minimal cost:    [...]
-shortest path:   [...]
+loop iterations: 483842
+minimal cost:    -
+shortest path:   Path not found
 
 > java RunPathFinder ucs GridGraph graphs/GridGraph/AR0011SR.map "23:161" "130:211"
 
-loop iterations: [...]
-minimal cost:    [...]
-shortest path:   [...]
+loop iterations: 159327
+minimal cost:    366.4
+shortest path:   309
 
 > java RunPathFinder astar GridGraph graphs/GridGraph/AR0011SR.map "23:161" "130:211"
 
-loop iterations: [...]
-minimal cost:    [...]
+loop iterations: 95160
+minimal cost:    366.4
 
 > java RunPathFinder ucs WordLadder graphs/WordLadder/words-saldo.txt syster broder
 
-loop iterations: [...]
-minimal cost:    [...]
-shortest path:   [...]
+loop iterations: 135142
+minimal cost:    11
+shortest path:   12
 
 > java RunPathFinder astar WordLadder graphs/WordLadder/words-saldo.txt syster broder
 
-loop iterations: [...]
-minimal cost:    [...]
+loop iterations: 9827
+minimal cost:    11
 
 
 /******************************************************************************
@@ -68,11 +67,11 @@ minimal cost:    [...]
 **    Try a number of different examples per class.
 ******************************************************************************/
 
-GridGraph:  [...]
+GridGraph:  Improved by ~factor 2
 
-WordLadder: [...]
+WordLadder: Improved by ~factor of 10
 
-NPuzzle:    [...]
+NPuzzle:    Improved by ~factor of 10
 
 
 /******************************************************************************
@@ -81,7 +80,8 @@ NPuzzle:    [...]
 **    Why do you think this is the case?
 ******************************************************************************/
 
-[...]
+It had the most impact in WordLadder and NPuzzle. We think this is because
+
 
 
 /******************************************************************************
@@ -89,15 +89,29 @@ NPuzzle:    [...]
 ******************************************************************************/
 
 WordLadder.outgoingEdges(String w):
-    [...]
+    List outgoing;
+    Char[] array;
+
+    for all char at i in Charset:
+       array[i] = char;
+       if dictionary contains array:
+        add array to outgoing
+
+    return outgoing
+
 
 
 WordLadder.guessCost(String w, String u):
-    [...]
-
+    char[] wArray
+    char[] uArray
+    count = 0
+    for all characters in arrays {
+        if (character in wArray and uArray not equal) count++
+    }
+    return count;
 
 GridGraph.guessCost(Coord p, Coord q):
-    [...]
+    return (euclidean distance between p and q)
 
 
 /******************************************************************************
@@ -105,15 +119,28 @@ GridGraph.guessCost(Coord p, Coord q):
 ******************************************************************************/
 
 PathFinder.searchAstar(Node start, Node goal):
-    [...]
+        pqueue = new PriorityQueue(comparing costToHere + guessCost)
+        pqueue.add(new PQEntry for start)
+        while pqueue is not empty:
+            entry = pqueue.remove()
+            if entry.node == goal:
+                SUCCESS:) extract the path and return it
+            for edge in graph.outgoingEdges(entry.node):
+                costToNext = entry.costToHere + edge.weight
+                guessCost = graph.guessCost(edge.to, goal)
+                newPQEntry = new PQEntry for edge.to
+                newPQEntry.setGuessCost(guessCost)
+                pqueue.add(newPQEntry)
+        FAILURE:( no solution found
 
 
 /******************************************************************************
 ** 6. What are the main differences between your implementations 
 **    of .searchAstar() and .searchUCS()?
 ******************************************************************************/
+The difference lies in the fact that .searchAstar takes the path to the goal as a
+whole into account when it chooses which node it shall move to.
 
-[...]
 
 
 
@@ -121,10 +148,9 @@ PathFinder.searchAstar(Node start, Node goal):
 ** Appendix: General information
 **
 ** A. Approximately how many hours did you spend on the assignment?
-******************************************************************************/
-
-[..group member..]:  [..hours..]
-[..group member..]:  [..hours..]
+*****************************************************************
+Anthon:   7h
+Ludvig:  7h
 [..group member..]:  [..hours..]
 
 
