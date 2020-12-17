@@ -4,7 +4,7 @@
 ** Lab 4: Path finder
 *******************************************************************************/
 
-Name of lab group: 95
+Name of lab group: 93
 Group member A:    Anthon Odengard
 Group member B:    Ludvig Jakobsson
 
@@ -73,16 +73,15 @@ WordLadder: Improved by ~factor of 10
 
 NPuzzle:    Improved by ~factor of 10
 
-
 /******************************************************************************
 ** 3. For which of the three classes GridGraph, WordLadder and NPuzzle,
 **    did the heuristics .guessCost() have the most impact?
 **    Why do you think this is the case?
 ******************************************************************************/
 
-It had the most impact in WordLadder and NPuzzle. We think this is because
-
-
+It had the most impact in WordLadder and NPuzzle. We think this is because of the
+branching factor of each problem. Namely that a large branching factor implies
+a large improvement when run with the A* algorithm.
 
 /******************************************************************************
 ** 4. Give pseudo-code of the following methods that you implemented
